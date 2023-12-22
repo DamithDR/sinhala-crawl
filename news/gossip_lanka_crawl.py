@@ -10,13 +10,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-def is_js_function_defined(driver, function_name):
-    try:
-        driver.execute_script(f'return typeof {function_name} !== "undefined";')
-        return True
-    except:
-        return False
-
 
 with open('data/gossip_lanka/links.txt', 'r') as file:
     links = file.readlines()
