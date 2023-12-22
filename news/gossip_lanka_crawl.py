@@ -30,16 +30,17 @@ with open('data/gossip_lanka/links.txt', 'r') as file:
             driver = webdriver.Chrome(options=options)
             driver.get(link)
             driver.execute_script("window.scrollBy(0, 700);")
+            try:
+                anchor_tags = WebDriverWait(driver, 5).until(
+                    EC.presence_of_all_elements_located(
+                        (By.XPATH, '//a[contains(text(), "reply") or contains(text(), "replies")]'))
+                )
 
-            anchor_tags = WebDriverWait(driver, 5).until(
-                EC.presence_of_all_elements_located(
-                    (By.XPATH, '//a[contains(text(), "reply") or contains(text(), "replies")]'))
-            )
-
-            for tag in anchor_tags:
-                if tag.accessible_name is not None:
-                    tag.click()
-
+                for tag in anchor_tags:
+                    if tag.accessible_name is not None:
+                        tag.click()
+            except Exception as exc:
+                print(f"exception happened in link : {link}")
             time.sleep(1)
             page_source = driver.page_source
 
