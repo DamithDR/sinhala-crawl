@@ -1,5 +1,6 @@
 import json
 import time
+from concurrent.futures.thread import ThreadPoolExecutor
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -9,8 +10,9 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-
-
+options = Options()
+options.headless = True  # This enables headless mode
+driver = webdriver.Chrome(options=options)
 with open('data/gossip_lanka/links.txt', 'r') as file:
     links = file.readlines()
     index = 0
@@ -18,9 +20,6 @@ with open('data/gossip_lanka/links.txt', 'r') as file:
         try:
             index += 1
             print(f'processing link : {link} | index : {index}')
-            options = Options()
-            options.headless = True  # This enables headless mode
-            driver = webdriver.Chrome(options=options)
             driver.get(link)
             driver.execute_script("window.scrollBy(0, 700);")
             try:
@@ -70,6 +69,7 @@ with open('data/gossip_lanka/links.txt', 'r') as file:
                       encoding='utf8') as outfile:
                 outfile.write(json_object)
 
-            driver.quit()
+
         except Exception as e:
-            print(f"exception in link {index}")
+            print(f"exception in link {index}, : {e}")
+driver.quit()
